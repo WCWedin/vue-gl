@@ -1,5 +1,3 @@
-import babel from 'rollup-plugin-babel';
-import { terser } from 'rollup-plugin-terser';
 import doc from 'rollup-plugin-vuedoc';
 import cp from 'rollup-plugin-copy';
 import del from 'rollup-plugin-delete';
@@ -38,8 +36,6 @@ async function rollup() {
       file: 'dist/vue-gl.js', format: 'umd', globals: { three: 'THREE' }, name: 'VueGL',
     },
     plugins: [
-      babel(),
-      terser(),
       doc({
         test: /\/vgl-.+\.js$/,
         prefix: 'components',
@@ -80,8 +76,6 @@ async function rollup() {
     external: ['three'],
     output: { file: 'dist/vue-gl.esm.js', format: 'es' },
     plugins: [
-      babel(),
-      terser(),
       del({ targets: 'dist/components' }),
     ],
   }, ...(await glob('examples/**/*.js', { objectMode: true })).map(({ path, name }) => ({
@@ -100,9 +94,7 @@ async function rollup() {
       name: `VueGL.${componentName(name)}`,
     },
     plugins: [
-      babel(),
       resolve(),
-      terser({ mangle: { reserved: ['ObjectManipulator'] } }),
       doc({
         test: /(^|\/)examples(\/[^/]+)*\/vgl-[^/]+$/,
         intro: ({ id }) => `---
@@ -140,9 +132,7 @@ async function rollup() {
     output: { file: 'docs/js/examples.js', format: 'iife' },
     plugins: [
       vue(),
-      babel({ extensions: ['.js', '.jsx', '.es6', '.es', '.mjs', '.vue'] }),
       resolve(),
-      terser(),
       del({
         targets: ['dist/examples/**/*.md', 'docs/js/examples/**/*.md', 'docs/examples/**/*.js'],
       }),
@@ -152,9 +142,7 @@ async function rollup() {
     output: { file: 'docs/js/examples-ex.js', format: 'iife' },
     plugins: [
       vue(),
-      babel({ extensions: ['.js', '.jsx', '.es6', '.es', '.mjs', '.vue'] }),
       resolve(),
-      terser(),
     ],
   }];
 }
